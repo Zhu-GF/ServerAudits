@@ -9,7 +9,7 @@ class IDC(models.Model):
 
 class Account(models.Model):
     '''登录堡垒机的用户表'''
-    user=models.OneToOneField(User)
+    user=models.OneToOneField(User,on_delete=models.CASCADE)
     name=models.CharField(max_length=64,verbose_name='用户名')
     host_user_bind=models.ManyToManyField('HostUserBind',blank=True)
     host_group=models.ManyToManyField('HostGroup',blank=True)
