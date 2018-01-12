@@ -126,7 +126,7 @@ def ssh_session(selected_host,user_obj):
         chan.invoke_shell()
         print('*** Here we go!\n')
 
-        session_obj = models.SessionLog.objects.create(account=user_obj.account,
+        session_obj = models.SessionLog.objects.create(account=user_obj,
                                                        host_user_bind=selected_host)
         interactive.interactive_shell(chan, session_obj)
         chan.close()
