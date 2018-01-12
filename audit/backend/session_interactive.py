@@ -72,7 +72,7 @@ def ssh_session(selected_host,user_obj):
     username =selected_host.host.addr #主机ip地址
     password=selected_host.host_user.password
     hostname =  selected_host.host_user.username
-    port = selected_host.host_user.port
+    port = selected_host.host.port
 
 
     # now connect
