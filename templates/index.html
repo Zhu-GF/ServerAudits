@@ -1,0 +1,497 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <div id="container" class="effect mainnav-lg mainnav-fixed aside-fixed navbar-fixed">
+
+        <!--NAVBAR-->
+        <!--===================================================-->
+        <header id="navbar">
+            <div id="navbar-container" class="boxed">
+
+                <!--Brand logo & name-->
+                <!--================================-->
+                <div class="navbar-header">
+                    <a href="index.html" class="navbar-brand">
+                        <img src="/static/img/logo.png" alt="Nifty Logo" class="brand-icon">
+                        <div class="brand-title">
+                            <span class="brand-text">Nifty</span>
+                        </div>
+                    </a>
+                </div>
+                <!--================================-->
+                <!--End brand logo & name-->
+
+
+                <!--Navbar Dropdown-->
+                <!--================================-->
+                <div class="navbar-content clearfix">
+                    <ul class="nav navbar-top-links pull-left">
+
+                        <!--Navigation toogle button-->
+                        <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                        <li class="tgl-menu-btn">
+                            <a class="mainnav-toggle" href="#">
+                                <i class="pli-view-list icon-lg"></i>
+                            </a>
+                        </li>
+                        <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                        <!--End Navigation toogle button-->
+
+
+                        <!--Notification dropdown-->
+                        <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                        <li class="dropdown">
+                            <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+                                <i class="pli-bell icon-lg"></i>
+                                <span class="badge badge-header badge-danger"></span>
+                            </a>
+
+
+                        </li>
+
+
+                    </ul>
+                    <ul class="nav navbar-top-links pull-right">
+
+                        <!--Language selector-->
+                        <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                        <li class="dropdown">
+                            <a class="lang-selector dropdown-toggle" href="#" data-toggle="dropdown">
+                                <span class="lang-selected">
+                                    <img class="lang-flag" src="/static/img/flags/united-kingdom.png" alt="English">
+                                    <span class="lang-id">EN</span>
+                                    <span class="lang-name">English</span>
+                                </span>
+                            </a>
+
+                            <!--Language selector menu-->
+                            <ul class="head-list dropdown-menu">
+                                <li>
+                                    <!--English-->
+                                    <a href="#" class="active">
+                                        <img class="lang-flag" src="/static/img/flags/united-kingdom.png" alt="English">
+                                        <span class="lang-id">EN</span>
+                                        <span class="lang-name">English</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <!--France-->
+                                    <a href="#">
+                                        <img class="lang-flag" src="/static/img/flags/france.png" alt="France">
+                                        <span class="lang-id">FR</span>
+                                        <span class="lang-name">Fran&ccedil;ais</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <!--Germany-->
+                                    <a href="#">
+                                        <img class="lang-flag" src="/static/img/flags/germany.png" alt="Germany">
+                                        <span class="lang-id">DE</span>
+                                        <span class="lang-name">Deutsch</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <!--Italy-->
+                                    <a href="#">
+                                        <img class="lang-flag" src="/static/img/flags/italy.png" alt="Italy">
+                                        <span class="lang-id">IT</span>
+                                        <span class="lang-name">Italiano</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <!--Spain-->
+                                    <a href="#">
+                                        <img class="lang-flag" src="/static/img/flags/spain.png" alt="Spain">
+                                        <span class="lang-id">ES</span>
+                                        <span class="lang-name">Espa&ntilde;ol</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                        <!--End language selector-->
+
+
+                        <!--User dropdown-->
+                        <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                        <li id="dropdown-user" class="dropdown">
+                            <a href="#" data-toggle="dropdown" class="dropdown-toggle text-right">
+                                <span class="pull-right">
+                                    <!-- You may use image instead of an icon.
+                                    <!--<img class="img-circle img-user media-object" src="img/av1.png" alt="Profile Picture">-->
+                                    <i class="pli-male ic-user"></i>
+                                </span>
+                                <div class="username hidden-xs">{{ request.user }}</div>
+                            </a>
+
+
+                            <div class="dropdown-menu dropdown-menu-md dropdown-menu-right panel-default">
+
+                                <!-- Dropdown heading  -->
+                                <div class="pad-all bord-btm">
+                                    <p class="text-main mar-btm"><span class="text-bold">750GB</span> of 1,000GB Used
+                                    </p>
+                                    <div class="progress progress-sm">
+                                        <div class="progress-bar" style="width: 70%;">
+                                            <span class="sr-only">70%</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <!-- User dropdown menu -->
+                                <ul class="head-list">
+                                    <li>
+                                        <a href="#">
+                                            <i class="pli-male icon-fw icon-lg"></i> Profile
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <span class="badge badge-danger pull-right">9</span>
+                                            <i class="pli-mail icon-fw icon-lg"></i> Messages
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <span class="label label-success pull-right">New</span>
+                                            <i class="pli-gear icon-fw icon-lg"></i> Settings
+                                        </a>
+                                    </li>
+                                </ul>
+
+                                <!-- Dropdown footer -->
+                                <div class="pad-all text-right">
+                                    <a href="/logout/" class="btn btn-primary">
+                                        <i class="pli-unlock icon-fw"></i> Logout
+                                    </a>
+                                </div>
+                            </div>
+                        </li>
+                        <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                        <!--End user dropdown-->
+
+                        <li>
+                            <a href="#" class="aside-toggle navbar-aside-icon">
+                                <i class="pci-ver-dots"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <!--================================-->
+                <!--End Navbar Dropdown-->
+
+            </div>
+        </header>
+        <!--===================================================-->
+        <!--END NAVBAR-->
+
+        <div class="boxed">
+
+            <!--CONTENT CONTAINER-->
+            <!--===================================================-->
+            <div id="content-container">
+
+                <!--Page Title-->
+                <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                <div id="page-title">
+                    <h1 class="page-header text-overflow">Expanded Navigation</h1>
+
+                    <!--Searchbox-->
+                    <div class="searchbox">
+                        <div class="input-group custom-search-form">
+                            <input type="text" class="form-control" placeholder="Search..">
+                            <span class="input-group-btn">
+                                <button class="text-muted" type="button"><i class="pli-magnifi-glass"></i></button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                <!--End page title-->
+                <!--Breadcrumb-->
+                <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                <ol class="breadcrumb">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Library</a></li>
+                    <li class="active">Data</li>
+                </ol>
+                <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                <!--End breadcrumb-->
+
+                <!--Page content-->
+                <!-----------------------------------------------------------------------------===================================================-->
+                <div id="page-content">
+                    <!-- QUICK TIPS -->
+                    <!-- ==================================================================== -->
+                    {% block page_content %}
+
+                    {% endblock %}
+
+                <!--===================================================-->
+                <!--End page content-->
+
+                <!--MAIN NAVIGATION-->
+                <!--===================================================-->
+                <nav id="mainnav-container">
+                    <div id="mainnav">
+
+                        <!--Menu-->
+                        <!--================================-->
+                        <div id="mainnav-menu-wrap">
+                            <div class="nano">
+                                <div class="nano-content">
+
+                                    <!--Shortcut buttons-->
+                                    <!--================================-->
+                                    <div id="mainnav-shortcut">
+                                        <ul class="list-unstyled">
+                                            <li class="col-xs-4" data-content="Shortcut 1">
+                                                <a class="shortcut-grid" href="#">
+                                                    <i class="psi-cloud"></i>
+                                                </a>
+                                            </li>
+                                            <li class="col-xs-4" data-content="Shortcut 2">
+                                                <a class="shortcut-grid" href="#">
+                                                    <i class="psi-data-stream"></i>
+                                                </a>
+                                            </li>
+                                            <li class="col-xs-4" data-content="Shortcut 3">
+                                                <a class="shortcut-grid" href="#">
+                                                    <i class="psi-phone-sms"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <!--================================-->
+                                    <!--End shortcut buttons-->
+
+                                    <ul id="mainnav-menu" class="list-group">
+
+                                        <!--Category name-->
+                                        <li class="list-header">Link List</li>
+
+                                        <!--Menu list item-->
+                                        <li class="active-link">
+                                            <a href="#">
+                                                <i class="psi-quill-2"></i>
+                                                <span class="menu-title">主面板</span>
+                                            </a>
+                                        </li>
+
+                                        <!--Menu list item-->
+                                        <li>
+                                            <a href="#">
+                                                <i class="psi-mail-love"></i>
+                                                <span class="menu-title">
+												<strong>主机列表</strong>
+											</span>
+                                            </a>
+                                        </li>
+
+                                        <!--Menu list item-->
+                                        <li>
+                                            <a href="#">
+                                                <i class="psi-gamepad-2"></i>
+                                                <span class="menu-title">
+												审计
+											</span>
+                                            </a>
+                                        </li>
+
+                                        <!--Menu list item-->
+                                        {#						    #}
+
+                                        <!--Category name-->
+                                        <li class="list-header">Submenus</li>
+
+                                        <!--Menu list item-->
+                                        <li class="active-sub">
+                                            <a href="#">
+                                                <i class="psi-mouse-3"></i>
+                                                <span class="menu-title">主机管理</span>
+                                                <i class="arrow"></i>
+                                            </a>
+
+                                            <!--Submenu-->
+                                            <ul class="collapse in">
+                                                <li><a href="#">批量命令</a></li>
+                                                <li><a href="#">批量文件</a></li>
+
+
+                                            </ul>
+                                        </li>
+
+                                        <!--End widget-->
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!--================================-->
+                        <!--End menu-->
+
+                    </div>
+                </nav>
+                <!--===================================================-->
+                <!--END MAIN NAVIGATION-->
+
+                <!--ASIDE-->
+                <!--===================================================-->
+                <aside id="aside-container">
+                    <div id="aside">
+                        <div class="nano">
+                            <div class="nano-content">
+
+                                <!--Nav tabs-->
+                                <!--================================-->
+                                <ul class="nav nav-tabs nav-justified">
+                                    <li class="active">
+                                        <a href="#demo-asd-tab-1" data-toggle="tab">
+                                            <i class="pli-speech-bubble-7"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#demo-asd-tab-2" data-toggle="tab">
+                                            <i class="pli-information"></i>
+                                            Reports
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#demo-asd-tab-3" data-toggle="tab">
+                                            <i class="pli-wrench"></i>
+                                            Settings
+                                        </a>
+                                    </li>
+                                </ul>
+                                <!--================================-->
+                                <!--End nav tabs-->
+
+
+                                <!-- Tabs Content -->
+                                <!--================================-->
+                                <div class="tab-content">
+
+                                    <!--First tab-->
+                                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                                    <div class="tab-pane fade in active" id="demo-asd-tab-1">
+                                        <p class="pad-all text-lg">First tab</p>
+                                        <div class="pad-hor">
+                                            Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
+                                            sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat
+                                            volutpat.
+                                            Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper
+                                            suscipit lobortis nisl
+                                            ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in
+                                            hendrerit in vulputate
+                                            velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis
+                                            at vero eros et accumsan
+                                            et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue
+                                            duis dolore te feugait nulla facilisi.
+                                        </div>
+                                    </div>
+                                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                                    <!--End first tab-->
+
+
+                                    <!--Second tab-->
+                                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                                    <div class="tab-pane fade" id="demo-asd-tab-2">
+                                        <p class="pad-all text-lg">Second tab</p>
+                                        <div class="pad-hor">
+                                            Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
+                                            sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat
+                                            volutpat.
+                                            Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper
+                                            suscipit lobortis nisl
+                                            ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in
+                                            hendrerit in vulputate
+                                            velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis
+                                            at vero eros et accumsan
+                                            et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue
+                                            duis dolore te feugait nulla facilisi.
+                                        </div>
+                                    </div>
+                                    <!--End second tab-->
+                                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+
+                                    <!--Third tab-->
+                                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                                    <div class="tab-pane fade" id="demo-asd-tab-3">
+                                        <p class="pad-all text-lg">Third tab</p>
+                                        <div class="pad-hor">
+                                            Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
+                                            sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat
+                                            volutpat.
+                                            Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper
+                                            suscipit lobortis nisl
+                                            ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in
+                                            hendrerit in vulputate
+                                            velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis
+                                            at vero eros et accumsan
+                                            et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue
+                                            duis dolore te feugait nulla facilisi.
+                                        </div>
+                                    </div>
+                                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+                <!--===================================================-->
+                <!--END ASIDE-->
+
+            </div>
+
+
+            <!-- FOOTER -->
+            <!--===================================================-->
+            <footer id="footer">
+
+                <!-- Visible when footer positions are fixed -->
+                <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+                <div class="show-fixed pull-right">
+                    You have <a href="#" class="text-bold text-main"><span class="label label-danger">3</span> pending
+                    action.</a>
+                </div>
+
+
+                <!-- Visible when footer positions are static -->
+                <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+                <div class="hide-fixed pull-right pad-rgt">
+                    14GB of <strong>512GB</strong> Free.
+                </div>
+
+
+                <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+                <!-- Remove the class "show-fixed" and "hide-fixed" to make the content always appears. -->
+                <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+                <p class="pad-lft">&#0169; 2017 Your Company</p>
+
+
+            </footer>
+            <!--===================================================-->
+            <!-- END FOOTER -->
+
+
+            <!-- SCROLL PAGE BUTTON -->
+            <!--===================================================-->
+            <button class="scroll-top btn">
+                <i class="pci-chevron chevron-up"></i>
+            </button>
+            <!--===================================================-->
+
+
+        </div>
+        <!--===================================================-->
+        <!-- END OF CONTAINER -->
+    </div>
+
+    <script>
+
+    </script>
+{% endblock %}

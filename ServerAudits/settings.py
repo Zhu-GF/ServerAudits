@@ -81,7 +81,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'server_audit',
         'USER':'root',
-        'PASSWORD':'',
+        'PASSWORD':'1234',
         'HOST':'localhost',
         'PORT':3306
     }
@@ -126,3 +126,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS=(
+    os.path.join(BASE_DIR,'static'),
+)
+
+LOGIN_URL = '/login/'

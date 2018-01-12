@@ -69,3 +69,13 @@ class SessionLog(models.Model):
 
     def __str__(self):
         return "%s-%s"%(self.account,self.host_user_bind)
+
+class Token(models.Model):
+    host_user_bind=models.ForeignKey('HostUserBind')
+    val=models.CharField(max_length=128)
+    account=models.ForeignKey('Account')
+    date=models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return '%s-%s'%(self.val,self.host_user_bind)
+    class Meta:
+        unique_together=('host_user_bind','val')

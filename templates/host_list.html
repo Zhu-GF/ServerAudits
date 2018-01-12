@@ -1,0 +1,87 @@
+{% extends 'index.html' %}
+{% block page_content %}
+<h3>Your content here...</h3>
+                    <br>
+                    <div class="panel col-lg-3">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">主机组</h3>
+                        </div>
+                        <div class="panel-body">
+                            <ul class="list-group">
+{#active#}
+                                {% for group in request.user.account.host_group.all %}
+                                <li class="list-group-item" onclick="GetHostList(this,{{ group.id }})"><span
+                                        class="badge badge-success">{{ group.host_user_binds.count }}</span>{{ group.name }}
+                                </li>
+                                {% endfor %}
+                             <li class="list-group-item" onclick="GetHostList(this,-1)"><span
+                                        class="badge badge-success">{{ request.user.account.host_user_bind.count}}</span>未分组服务器
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                    <div class="panel col-lg-9">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">主机列表</h3>
+                        </div>
+                        <div class="panel-body">
+
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>Hostname</th>
+                                        <th>IP</th>
+                                        <th>IDC</th>
+                                        <th>Port</th>
+                                        <th>Username</th>
+                                        <th>Login</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="hostlist">
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+    <script>
+    function GetHostList(self,gid) {
+        $(self).addClass("active").siblings().removeClass('active');
+        $.get("{% url 'get_host_list' %}",{'gid':gid},function (args) {
+       $('#hostlist').empty();
+        $.each(JSON.parse(args),function (k,v) {
+                  var tr_tag=document.createElement('tr');
+                  $.each(v,function (kk,vv) {
+                      var td_tag=document.createElement('td');
+                      if(kk=='host_id'){
+                          var a_tag=document.createElement('a');
+                          $(a_tag).attr('class','btn btn-info');
+                          $(td_tag).attr('host_id',vv);
+{#                          $(td_tag).attr('class','token_generate');#}
+                          $(td_tag).attr('onclick','Generate_token(this);');
+                          $(a_tag).text('Token');
+                           $(td_tag).append(a_tag);
+                      }else{
+                          $(td_tag).text(vv);
+                      }
+                      $(tr_tag).append(td_tag);
+                  });
+            $('#hostlist').append(tr_tag);
+        })
+        })
+
+    }
+
+    function Generate_token(self) {
+        var host_id=$(self).attr('host_id');
+        $.post("{% url 'generate_token' %}",{'host_id':host_id,'csrfmiddlewaretoken':"{{ csrf_token }}"},function(args){
+            /*将host_id传到后端，后端返回token值*/
+            console.log(args);
+    })}
+    </script>
+{% endblock %}
