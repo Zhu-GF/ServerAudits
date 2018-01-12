@@ -78,7 +78,7 @@ def ssh_session(selected_host,user_obj):
     # now connect
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.connect((hostname, port))
+        sock.connect((username, port))
     except Exception as e:
         print('*** Connect failed: ' + str(e))
         traceback.print_exc()
