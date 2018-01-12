@@ -69,16 +69,17 @@ def manual_auth(t,username, password):
 
 
 def ssh_session(selected_host,user_obj):
-    username =selected_host.host.addr #主机ip地址
-    password=selected_host.host_user.password
-    hostname =  selected_host.host_user.username
+    # username =selected_host.host.addr #主机ip地址
+    # password=selected_host.host_user.password
+    # hostname =  selected_host.host_user.username
+    # port = selected_host.host.port
+    hostname = selected_host.host.addr
     port = selected_host.host.port
-
-
-    # now connect
+    username = selected_host.host_user.username
+    password =selected_host.host_user.password
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.connect((username, port))
+        sock.connect((hostname, port))
     except Exception as e:
         print('*** Connect failed: ' + str(e))
         traceback.print_exc()
@@ -113,29 +114,21 @@ def ssh_session(selected_host,user_obj):
         else:
             print('*** Host key OK.')
 
-        # get username
-        if username == '':
-            default_username = getpass.getuser()
-            username = input('Username [%s]: ' % default_username)
-            if len(username) == 0:
-                username = default_username
-
         if not t.is_authenticated():
-            manual_auth(t,username, password)
+            manual_auth(t, username, password)
         if not t.is_authenticated():
             print('*** Authentication failed. :(')
             t.close()
             sys.exit(1)
 
         chan = t.open_session()
-        chan.get_pty()
+        chan.get_pty()  # terminal
         chan.invoke_shell()
         print('*** Here we go!\n')
 
-        session_obj=models.SessionLog.objects.create(account=user_obj,host_user_bind=selected_host)  #进入会话写入SessionLog表中
-        interactive.interactive_shell(chan,session_obj)
-
-
+        session_obj = models.SessionLog.objects.create(account=user_obj.account,
+                                                       host_user_bind=selected_host)
+        interactive.interactive_shell(chan, session_obj)
         chan.close()
         t.close()
 
