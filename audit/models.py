@@ -20,7 +20,7 @@ class Host(models.Model):
     hostname=models.CharField(max_length=64,unique=True,verbose_name='主机名')
     addr=models.GenericIPAddressField(verbose_name='ip地址')
     port=models.IntegerField(verbose_name='端口')
-    idc=models.ForeignKey('IDC',verbose_name='关联到机房')
+    idc=models.ForeignKey('IDC',verbose_name='关联到机房',on_delete=models.CASCADE)
     enabled=models.BooleanField(default=True)  #主机是否可用
     def __str__(self):
         return "%s-%s"%(self.hostname,self  .addr)
@@ -38,8 +38,8 @@ class HostUser(models.Model):
 
 class HostUserBind(models.Model):
     '''主机和账户关联起来'''
-    host=models.ForeignKey('Host')
-    host_user=models.ForeignKey('HostUser')
+    host=models.ForeignKey('Host',on_delete=models.CASCADE)
+    host_user=models.ForeignKey('HostUser',on_delete=models.CASCADE)
     class Meta:
         unique_together=('host','host_user')
     def __str__(self):
@@ -54,7 +54,7 @@ class HostGroup(models.Model):
 
 class AuditLog(models.Model):
     '''审计日志表，记录在主机上的操作'''
-    session=models.ForeignKey('SessionLog')
+    session=models.ForeignKey('SessionLog',on_delete=models.CASCADE)
     cmd=models.TextField()
     date=models.DateTimeField(auto_now_add=True)
     def __str__(self):
@@ -62,8 +62,8 @@ class AuditLog(models.Model):
 
 
 class SessionLog(models.Model):
-    account=models.ForeignKey('Account')
-    host_user_bind=models.ForeignKey('HostUserBind')
+    account=models.ForeignKey('Account',on_delete=models.CASCADE)
+    host_user_bind=models.ForeignKey('HostUserBind',on_delete=models.CASCADE)
     start_date=models.DateTimeField(auto_now_add=True)
     end_date=models.DateTimeField(blank=True,null=True)
 
