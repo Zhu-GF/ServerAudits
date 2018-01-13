@@ -31,9 +31,9 @@ def auth_logout(request):
 
 @login_required
 def index(request):
-    host_group_list=request.user.account.host_group.all()
-    host_list=request.user.account.host_user_bind.all()
-    print(host_group_list,host_list)
+    # host_group_list=request.user.account.host_group.all()
+    # host_list=request.user.account.host_user_bind.all()
+    # print(host_group_list,host_list)
     return render(request,'host_list.html')
 
 @login_required
@@ -52,7 +52,6 @@ def generate_token(request):
     '前端向后台付出ajax请求，依据hostid，产生一个随机字符串，并记录到数据库中，每次请求进来，删掉五分钟前生成的随机字符串'
     seconds=8*60*60+300
     time_obj = datetime.datetime.now() - datetime.timedelta(seconds=seconds)  # 5mins ago
-    print(datetime.datetime.now())
     models.Token.objects.filter(date__lt=time_obj).delete()   #删掉时间超过5分钟的数据
     host_id=request.POST.get('host_id')
     token_obj=models.Token.objects.filter(host_user_bind__host_id=host_id,date__gt=time_obj).first()
@@ -63,7 +62,7 @@ def generate_token(request):
         host_user_bind_obj=models.HostUserBind.objects.filter(host_id=host_id).first()
         models.Token.objects.create(host_user_bind=host_user_bind_obj,account=request.user.account,val=val)
         token_data=val
-    return HttpResponse({'val',token_data})
+    return HttpResponse(token_data)
 
 
 

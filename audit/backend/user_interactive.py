@@ -1,7 +1,7 @@
 __author__ = 'Administrator'
 from django.contrib.auth import authenticate
 # import subprocess,string,random
-# from audit import models
+from audit import models
 from audit.backend import session_interactive
 class UserShell():
     def __init__(self):
@@ -11,6 +11,7 @@ class UserShell():
     def auth(self):
         i=0
         while i<3:
+            print('------进入账户姓名验证-----------')
             username=input('姓名：').strip()
             password=input('密码：').strip()
             user=authenticate(username=username,password=password)
@@ -22,8 +23,24 @@ class UserShell():
                 return True
         else:
             print('最多输入三次')
+    def input_token(self):
+        i=0
+        while i<3:
+            token_input=input('请输入token值>>>').strip()
+            if len(token_input)==8:
+                token_obj=models.Token.objects.filter(val=token_input).first()
+                print(token_obj)
+                if token_obj:
+                    return token_obj
+            i+=1
+        print('too much try!')
 
     def start(self):
+        token_obj=self.input_token()
+        if token_obj:
+            user_obj = token_obj.account
+            selected_host=token_obj.host_user_bind
+            session_interactive.ssh_session(selected_host, user_obj)
         if self.auth():
             host_gruops = self.user.account.host_group.all()
             while True:

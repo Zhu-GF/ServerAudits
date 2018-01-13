@@ -81,7 +81,7 @@
         var host_id=$(self).attr('host_id');
         $.post("{% url 'generate_token' %}",{'host_id':host_id,'csrfmiddlewaretoken':"{{ csrf_token }}"},function(args){
             /*将host_id传到后端，后端返回token值*/
-            console.log(args);
+            $(self).text(args);
     })}
     </script>
 {% endblock %}
