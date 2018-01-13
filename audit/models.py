@@ -71,9 +71,9 @@ class SessionLog(models.Model):
         return "%s-%s"%(self.account,self.host_user_bind)
 
 class Token(models.Model):
-    host_user_bind=models.ForeignKey('HostUserBind')
+    host_user_bind=models.ForeignKey('HostUserBind',on_delete=models.CASCADE)
     val=models.CharField(max_length=128)
-    account=models.ForeignKey('Account')
+    account=models.ForeignKey('Account',on_delete=models.CASCADE)
     date=models.DateTimeField(auto_now_add=True)
     def __str__(self):
         return '%s-%s'%(self.val,self.host_user_bind)
