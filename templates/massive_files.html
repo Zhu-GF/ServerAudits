@@ -1,0 +1,210 @@
+{% extends 'index.html' %}
+{% block extra_link %}
+<link href="/static/plugins/dropzone/dropzone.min.css" rel="stylesheet">
+<script src="/static/plugins/dropzone/dropzone.min.js"></script>
+{% endblock %}
+{% block page_content %}
+
+    <h3>批量文件传输...</h3>
+                    <br>
+                    <div class="panel col-lg-3">
+                        <div class="panel-heading">
+                            <h3 class="panel-title" id="show_count">主机组</h3>
+                        </div>
+                        <div class="panel-body">
+                            <ul class="list-group" id="selected_group">
+{#active#}
+                                {% for group in request.user.account.host_group.all %}
+                                <li class="list-group-item">
+                                    <input type="checkbox" name="selected_host_group" onclick="SelectHostGroup(this);">
+                                    <span class="badge badge-success" >{{ group.host_user_binds.count }}</span>
+                                    <a onclick="ShowHost(this)">{{ group.name }}</a>
+                                <ul class="server_list hide">
+                                    {% for server in group.host_user_binds.all %}
+                                    <li> <input type="checkbox" name="selected_host" onclick="ShowHostCount(this);" value="{{ server.host.id  }}">{{ server.host.addr }}</li>
+                                    {% endfor %}
+                                </ul>
+                                </li>
+                                {% endfor %}
+                             <li class="list-group-item">
+                                 <input type="checkbox" name="selected_host_group" onclick="SelectHostGroup(this);">
+                                 <span class="badge badge-success"  onclick="ShowHost(this)">{{ request.user.account.host_user_bind.count}}</span>
+                                 <a onclick="ShowHost(this)">未分组服务器</a>
+                                 <ul class="server_list hide">
+                                    {% for server in request.user.account.host_user_bind.all %}
+                                    <li> <input type="checkbox" name="selected_host" onclick="ShowHostCount(this);" value="{{ server.host.id  }}">{{ server.host.addr }}</li>
+                                    {% endfor %}
+                                </ul>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                    <div class="panel col-lg-9">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">传输类型</h3>
+                        </div>
+                        <div class="panel-body">
+                            <select name="transfer_type" id="transfer_types" style="width: 220px;height: 30px;margin-bottom: 10px" onchange="ChangeOptions(this);">
+                                <option value="download_files" >将文件下载到堡垒机</option>
+                                <option value="upload_files" selected="selected">将文件传输到远程主机</option>
+
+                            </select>
+                            <div id="option_content">
+                                <div id="option_file_upload">
+                                        <form id="demo-dropzone" action="/file_receive/?random_str={{ random_str }}" class="dropzone dz-clickable">
+                                    <div class="dz-default dz-message">
+                                        <div class="dz-icon">
+                                            <i class="demo-pli-upload-to-cloud icon-5x"></i>
+                                        </div>
+                                        <div>
+                                            <span class="dz-text">Drop files to upload</span>
+                                            <p class="text-sm text-muted">or click to pick manually</p>
+                                        </div>
+                                    </div>
+                                </form>
+                                </div>
+                                <div>
+                                    <input type="text" placeholder="请输入远程文件路径" class="form-control" id="remote_path">
+                                </div>
+
+                            </div>
+                            <br>
+                            <button class="btn btn-pink btn-rounded pull-left">终止</button>
+                             <button class="btn btn-mint btn-rounded pull-right" onclick="DoCommond('file_transfer');">执行</button>
+                            <a class="btn btn-success hide" id="download_btn">下载文件到本地</a>
+                        </div>
+                    </div>
+<div class="panel col-lg-9 pull-right">
+                        <div class="panel-heading" id="result_items">
+                            <h3 class="panel-title">命令结果</h3>
+                        </div>
+                        <div  id="progress_bar"></div>
+                        <div class="panel-body" id="result_items">
+
+                            <div class="table-responsive">
+                               div  content
+
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+    <script>
+    function ShowHost(self) {
+        // 点击显示隐藏的主机列表
+        $(self).next().toggleClass('hide')
+    }
+
+    function SelectHostGroup(self) {
+        //点击选择该组下的所有主机
+        $(self).siblings('ul').find('input').prop('checked',$(self).prop('checked'));
+        ShowHostCount();
+    }
+function ShowHostCount() {
+    var selected_host_count=$('#selected_group ul').find(':checked').length;
+    $('#show_count').text('主机组：'+selected_host_count);
+    return selected_host_count
+}
+function DoCommond(task_type) {
+    //先检测有没有选择到主机
+    //再检测有没有输入内容
+
+
+    var host_id_list=[];
+    var selected_host=$('#selected_group ul').find(':checked');
+    $.each(selected_host,function (k,v) {
+        host_id_list.push($(v).val());
+    });
+    if (host_id_list.length==0){
+        alert('请选择主机！');
+        return false
+    }
+    if (task_type=='cmd'){
+          var cmd=$.trim($('#cmd_input').val());
+            if(cmd.length==0){
+                alert('请输入内容');
+                return false
+            }
+    }else{
+        //任务类型为文件传输
+        var transfer_types=$('#transfer_types').val();
+        var remote_path=$.trim($('#remote_path').val());
+        if (transfer_types=='download_files'){
+            if (remote_path.length==0){
+                alert('请输入远程路径！');
+                return false
+            }
+        }
+    }
+   task_data={
+            'task_type':task_type,
+            'host_id_list':host_id_list
+        };
+    if(task_type=='cmd'){
+        task_data['cmd']=cmd
+    }else{
+        task_data['transfer_types']=transfer_types;
+        task_data['random_str']='{{ random_str }}';
+        task_data['remote_path']=remote_path;
+    }
+   //向后台发数据
+
+    $.post('{% url "massive_process"  %}',{'csrfmiddlewaretoken':"{{ csrf_token }}",'task_data':JSON.stringify(task_data)},
+        function(args){
+        //将任务主机id及任务上传到后端，并获取后台给的总任务id,args
+            console.log(JSON.parse(args).task_id);//获取到task_id 去数据库中取值，并放入前端
+            var task_id=JSON.parse(args).task_id;
+                GetTaskREsult(task_id);
+              var set_timer=setInterval(function () {
+                    GetTaskREsult(task_id);
+        },2000);
+        //下载文件到本地
+            $('#download_btn').attr('href','{% url "tansfer_file_to_user" %}?task_id='+task_id);
+            $('#download_btn').removeClass('hide');
+    })
+}
+function GetTaskREsult(task_id) {
+    $.getJSON('{% url "massive_process_result" %}',{'task_id':task_id},function(callback){
+        ///var result_list=JSON.parse(callback);
+        console.log(callback);
+        var total_task_count=callback.length;
+        var task_count_finished=0;
+        $('#result_items').empty();
+        $.each(callback,function (k,v) {
+              var h3_tag=document.createElement('h3');
+                var h3text=v.host_user_bind__host__hostname+v.host_user_bind__host__addr+v['status'];
+                $(h3_tag).text(h3text);
+                var pre_tag=document.createElement('pre');
+                $(pre_tag).text(v['result']);
+                $('#result_items').append(h3_tag);
+                $('#result_items').append(pre_tag);
+            if(v.status==0){
+                task_count_finished=task_count_finished+1;
+            }
+        });
+        //<div style="width: 75%;" class="progress-bar progress-bar-info">75%</div>
+        //增加一个进度条
+        var process_percent=Math.round((task_count_finished/total_task_count)*100)+'%';
+        var div_process=document.createElement('prev');
+        $(div_process).text(process_percent);
+        $(div_process).attr('class',"progress-bar progress-bar-info");
+        $(div_process).css('width',process_percent);
+        $('#progress_bar').empty();
+        $('#progress_bar').append(div_process);
+
+    })
+}
+function ChangeOptions(self) {
+    if($(self).val()=='upload_files'){
+        $('#option_file_upload').removeClass('hide');
+    }else{
+       $('#option_file_upload').addClass('hide');
+    }
+}
+
+    </script>
+{% endblock %}

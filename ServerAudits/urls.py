@@ -24,5 +24,11 @@ urlpatterns = [
     url(r'^logout/', views.auth_logout, name='logout'),
     url(r'^host_list/', views.get_host_list, name='get_host_list'),
     url(r'^generate_token/', views.generate_token, name='generate_token'),
+    url(r'^massive_cmd/', views.massive_cmd, name='massive_cmd'),
+    url(r'^massive_process/', views.massive_process, name='massive_process'),
+    url(r'^massive_process_result/', views.massive_process_result, name='massive_process_result'),
+    url(r'^massive_files/', views.massive_files, name='massive_files'),
+    url(r'^file_receive/', views.file_receive, name='file_receive'),
+    url(r'^tansfer_file_to_user/', views.tansfer_file_to_user, name='tansfer_file_to_user'),
 
 ]

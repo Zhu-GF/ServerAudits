@@ -1,0 +1,158 @@
+{% extends 'index.html' %}
+{% block page_content %}
+
+    <h3>批量命令执行...</h3>
+                    <br>
+                    <div class="panel col-lg-3">
+                        <div class="panel-heading">
+                            <h3 class="panel-title" id="show_count">主机组</h3>
+                        </div>
+                        <div class="panel-body">
+                            <ul class="list-group" id="selected_group">
+{#active#}
+                                {% for group in request.user.account.host_group.all %}
+                                <li class="list-group-item">
+                                    <input type="checkbox" name="selected_host_group" onclick="SelectHostGroup(this);">
+                                    <span class="badge badge-success" >{{ group.host_user_binds.count }}</span>
+                                    <a onclick="ShowHost(this)">{{ group.name }}</a>
+                                <ul class="server_list hide">
+                                    {% for server in group.host_user_binds.all %}
+                                    <li> <input type="checkbox" name="selected_host" onclick="ShowHostCount(this);" value="{{ server.host.id  }}">{{ server.host.addr }}</li>
+                                    {% endfor %}
+                                </ul>
+                                </li>
+                                {% endfor %}
+                             <li class="list-group-item">
+                                 <input type="checkbox" name="selected_host_group" onclick="SelectHostGroup(this);">
+                                 <span class="badge badge-success"  onclick="ShowHost(this)">{{ request.user.account.host_user_bind.count}}</span>
+                                 <a onclick="ShowHost(this)">未分组服务器</a>
+                                 <ul class="server_list hide">
+                                    {% for server in request.user.account.host_user_bind.all %}
+                                    <li> <input type="checkbox" name="selected_host" onclick="ShowHostCount(this);" value="{{ server.host.id  }}">{{ server.host.addr }}</li>
+                                    {% endfor %}
+                                </ul>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                    <div class="panel col-lg-9">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">命令输入</h3>
+                        </div>
+                        <div class="panel-body">
+                            <textarea name="cmd" id="cmd_input" cols="30" rows="10" style="width: 880px;height: 60px"></textarea>
+                            <button class="btn btn-pink btn-rounded pull-left">终止</button>
+                             <button class="btn btn-mint btn-rounded pull-right" onclick="DoCommond('cmd');">执行</button>
+
+                        </div>
+                    </div>
+<div class="panel col-lg-9">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">命令结果</h3>
+                        </div>
+                        <div  id="progress_bar"></div>
+                        <div class="panel-body" id="result_items">
+
+                            <div class="table-responsive">
+                               div  content
+
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+    <script>
+    function ShowHost(self) {
+        // 点击显示隐藏的主机列表
+        $(self).next().toggleClass('hide')
+    }
+
+    function SelectHostGroup(self) {
+        //点击选择该组下的所有主机
+        $(self).siblings('ul').find('input').prop('checked',$(self).prop('checked'));
+        ShowHostCount();
+    }
+function ShowHostCount() {
+    var selected_host_count=$('#selected_group ul').find(':checked').length;
+    $('#show_count').text('主机组：'+selected_host_count);
+    return selected_host_count
+}
+function DoCommond(task_type) {
+    //先检测有没有选择到主机
+    //再检测有没有输入内容
+
+
+    var host_id_list=[];
+    var selected_host=$('#selected_group ul').find(':checked');
+    $.each(selected_host,function (k,v) {
+        host_id_list.push($(v).val());
+    });
+    if (host_id_list.length==0){
+        alert('请选择主机！');
+        return false
+    }
+    var cmd=$.trim($('#cmd_input').val());
+    if(cmd.length==0){
+        alert('请输入内容');
+        return false
+    }
+   //向后台发数据
+    task_data={
+        'task_type':task_type,
+        'host_id_list':host_id_list,
+        'cmd':cmd
+    };
+    $.post('{% url "massive_process"  %}',{'csrfmiddlewaretoken':"{{ csrf_token }}",'task_data':JSON.stringify(task_data)},
+        function(args){
+        //将任务主机id及任务上传到后端，并获取后台给的总任务id,args
+            console.log(JSON.parse(args).task_id);//获取到task_id 去数据库中取值，并放入前端
+            var task_id=JSON.parse(args).task_id;
+                GetTaskREsult(task_id);
+              var set_timer=setInterval(function () {
+                    GetTaskREsult(task_id);
+        },2000)
+
+
+
+    })
+}
+function GetTaskREsult(task_id) {
+    $.getJSON('{% url "massive_process_result" %}',{'task_id':task_id},function(callback){
+        ///var result_list=JSON.parse(callback);
+        console.log(callback);
+        var total_task_count=callback.length;
+        var task_count_finished=0;
+        $('#result_items').empty();
+        $.each(callback,function (k,v) {
+              var h3_tag=document.createElement('h3');
+                var h3text=v.host_user_bind__host__hostname+v.host_user_bind__host__addr+v['status'];
+                $(h3_tag).text(h3text);
+                var pre_tag=document.createElement('pre');
+                $(pre_tag).text(v['result']);
+                $('#result_items').append(h3_tag);
+                $('#result_items').append(pre_tag);
+            if(v.status==0){
+                task_count_finished=task_count_finished+1;
+            }
+        });
+        //<div style="width: 75%;" class="progress-bar progress-bar-info">75%</div>
+        //增加一个进度条
+        var process_percent=Math.round((task_count_finished/total_task_count)*100)+'%';
+        var div_process=document.createElement('prev');
+        $(div_process).text(process_percent);
+        $(div_process).attr('class',"progress-bar progress-bar-info");
+        $(div_process).css('width',process_percent);
+        $('#progress_bar').empty();
+        $('#progress_bar').append(div_process);
+
+
+    })
+}
+
+
+    </script>
+{% endblock %}

@@ -81,7 +81,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'server_audit',
         'USER':'root',
-        'PASSWORD':'',
+        'PASSWORD':'1234',
         'HOST':'localhost',
         'PORT':3306
     }
@@ -132,3 +132,6 @@ STATICFILES_DIRS=(
 )
 
 LOGIN_URL = '/login/'
+TASK_PROCESS_PATH=os.path.join(BASE_DIR,'task_process.py')
+FILE_UPLOAD_PATH=os.path.join(BASE_DIR,'uploads')
+FILE_DOWNLOAD_PATH=os.path.join(BASE_DIR,'downloads')

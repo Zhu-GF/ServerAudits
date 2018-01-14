@@ -79,3 +79,26 @@ class Token(models.Model):
         return '%s-%s'%(self.val,self.host_user_bind)
     class Meta:
         unique_together=('host_user_bind','val')
+
+class Task(models.Model):
+    '总任务表'
+    task_type_choices=((0,'cmd'),(1,'file_transfer'))
+    task_type=models.SmallIntegerField(choices=task_type_choices)
+    content=models.TextField(verbose_name='执行的命令内容')
+    account=models.ForeignKey('Account',on_delete=models.CASCADE)
+    date=models.DateTimeField(auto_now_add=True)
+    timeout=models.SmallIntegerField(default=300,verbose_name='超时时间')
+    def __str__(self):
+        return '%s-%s'%(self.content,self.account)
+
+class TaskLog(models.Model):
+    '记录命令执行的结果'
+    task=models.ForeignKey('Task',on_delete=models.CASCADE)
+    host_user_bind=models.ForeignKey('HostUserBind',on_delete=models.CASCADE)
+    result=models.TextField(verbose_name='执行结果',default='init.....')
+    date=models.DateTimeField(auto_now_add=True)
+    status_choices=((0,'成功'),(1,'失败'),(2,'超时'),(3,'初始化'))
+    status=models.SmallIntegerField(choices=status_choices,verbose_name='执行状态')
+
+    def __str__(self):
+        return '%s-%s-%s'%(self.task,self.result,self.status)
